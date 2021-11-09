@@ -1,5 +1,7 @@
 # my first youtube project
 
+![image-20211110011407886](md-images/image-20211110011407886.png)
+
 ### 1. 프로젝트 준비
 
 #### 프로젝트 생성 및 lodash 설치
