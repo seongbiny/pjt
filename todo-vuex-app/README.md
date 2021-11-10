@@ -133,14 +133,15 @@ export default new Vuex.Store({
 </template>
 
 <script>
-...
+// 1. vuex 모듈에서 mapState 메서드만 가져옴
+import { mapState } from 'vuex'
+
 export default {
   ...
   computed: {
-    todos: function () {
-      // 컴포넌트에서 Vuex Store의 state에 접근
-      return this.$store.state.todos
-    }
+    ...mapState([
+      'todos' // state에 지정한 이름을 그대로 사용
+    ])
   }
 }
 </script>
@@ -307,12 +308,15 @@ export default {
 
 <template>
   <div>
+    <!-- payload로 넘겨줬던 this.todo를 pass prop으로 변경해서 전달한다. -->
     <span @click="updateTodoStatus(todo)">{{ todo.title }}</span>
     <button @click="deleteTodo(todo)">Delete</button>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+    
 export default {
   ...
   methods: {
@@ -380,6 +384,74 @@ actions: {
 ```
 
 ### Getters
+
+#### todo 개수 계산
+
+```js
+// index.js
+
+  getters: {
+    completedTodosCount: function (state) {
+      return state.todos.filter(todo => {
+        return todo.isCompleted === true
+      }).length
+    },
+    uncompletedTodosCount: function (state) {
+      return state.todos.filter(todo => {
+        return todo.isCompleted === false
+      }).length
+    },
+    allTodosCount: function (state) {
+      return state.todos.length
+    }
+  },
+```
+
+```vue
+// App.vue
+
+<template>
+  <div id="app">
+    <h1>Todo List</h1>
+    <h2>모든 투두 개수 : {{ allTodosCount }}</h2>
+    <h2>완료된 투두 개수 : {{ completedTodosCount }}</h2>
+    <h2>완료되지 않은 투두 개수 : {{ uncompletedTodosCount }}</h2>
+    ...
+  </div>
+</template>
+
+<script>
+import { mapGetters } from 'vuex'
+    ...
+computed: {
+    // mapGetters 안에 정의한 메서드 중에서 아래 3개만 가져와서 Array에 추가한다.
+    ...mapGetters([
+      'completedTodosCount',
+      'uncompletedTodosCount',
+      'allTodosCount',
+    ])
+  }
+</script>
+```
+
+### LocalStorage
+
+#### vuex-persistedstate
+
+* Vuex state를 자동으로 브라우저의 LocalStorage에 저장해주는 라이브러리 중 하나
+* 페이지가 새로고침 되어도 Vuex state를 유지시킴
+
+```python
+$ npm install vuex-persistedstate
+```
+
+* 라이브러리 사용
+
+```js
+// index.js
+
+import createPersistedState from "vuex-persistedstate"
+```
 
 
 
