@@ -426,12 +426,7 @@ export default {
       type: Object,
     }
   },
-  computed: {
-    ...
-    // 이거 안됨 물어보기
-    videoTitle: function (video) {
-      return _.unescape(video.snippet.title)
-    }
+  ...
   }
 }
 </script>
@@ -447,9 +442,9 @@ export default {
     <div>
       <iframe :src="videoURI" frameborder="0"></iframe>
     </div>
-    <h2>{{ videoTitle }}</h2>
-    <hr>
-    <p>{{ video.snippet.description }}</p>
+    <h2>{{ videoTitle | stringUnescape }}</h2>
+    <hr/>
+    <p>{{ video.snippet.description | stringUnescape }}</p>
   </div>
 </template>
 
@@ -462,7 +457,10 @@ export default {
       const videoId = this.video.id.videoId
       return `https://www.youtube.com/embed/${videoId}`
     },
-	...
+  filters: {
+    stringUnescape: function (rawText) {
+      return _.unescape(rawText);
+    },
   }
 }
 </script>
