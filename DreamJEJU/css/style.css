@@ -1,0 +1,54 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+#container {
+  margin: 0 auto;
+  width: 1200px;
+}
+header {
+  width: 100%;
+  height: 100px;
+  background-color: blue;
+}
+#logo {
+  float: left;
+  width: 250px;
+  height: 100px;
+  background-color: indigo;
+}
+nav {
+  float: right;
+  width: 900px;
+  height: 100px;
+  background-color: green;
+}
+#sildeShow {
+  clear: both;
+  width: 100%;
+  height: 300px;
+  background-color: orange;
+  overflow: hidden;
+}
+#contents {
+  width: 100%;
+  height: 300px;
+}
+#tabMenu {
+  float: left;
+  width: 600px;
+  height: 100%;
+  background-color: violet;
+}
+#links {
+  float: right;
+  width: 600px;
+  height: 100%;
+  background-color: skyblue;
+}
+footer {
+  width: 100%;
+  height: 100px;
+  background-color: gray;
+}
