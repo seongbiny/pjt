@@ -1,6 +1,17 @@
 
 
-$메인컬러 : #ff0000;
+$메인컬러 : black;
+
+.wow-enter {
+    opacity: 0;
+}
+.wow-enter-active {
+    opacity: 1;
+    transition: all 500ms;
+}
+
+
+
 
 .red {
     color: $메인컬러;
