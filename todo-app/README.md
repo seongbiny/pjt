@@ -79,5 +79,78 @@ function TodoListItem({ todo }){
         </div>
     )
 }
+
+export default TodoListItem;
 ```
 
+ ### Create
+
+TodoInsert 컴포넌트에서 인풋 상태를 관리하고 App 컴포넌트에는 todos 배열에 새로운 객체를 추가하는 함수를 만들어 주어야 한다.
+
+#### TodoInsert value 상태 관리하기
+
+TodoInsert 컴포넌트에서 인풋에 입력하는 값을 관리할 수 있도록 useState를 사용하여 value라는 상태를 정의한다. 인풋에 넣어 줄 onChange 함수는 컴포넌트가 리랜더링될 때마다 함수를 새로 만드는 것이 아니라, 한 번 함수를 만들고 재사용할 수 있도록 useCallback Hook을 사용한다.
+
+```jsx
+// TodoInsert.js
+
+...
+function TodoInsert(){
+    const [value, setValue] = useState('');
+    const onChange = useCallback(e => {
+        setValue(e.target.value);
+    }, []);
+    
+    return (
+    <form className="TodoInsert" onSubmit={onSubmit}>
+	    <input 
+              placeholder="할 일을 입력하세요"
+              value={value}
+              onChange={onChange}
+            />
+            <button type="submit">
+                <MdAdd />
+            </button>
+        </form>
+    )
+}
+
+export default TodoInsert;
+```
+
+#### todos 배열에 새 객체 추가하기
+
+새로운 객체가 만들어질 때마다 id 값에 1씩 더해 주어야 한다. => useRef 사용. id 값을 랜더링되는 정보가 아니라 단순히 새 항목을 만들 때 참조되는 값일 뿐이니까
+
+```jsx
+// App.js
+
+function App(){
+    ...
+    const nextId = useRef(4);
+    const onInsert = useCallback(
+    text => {
+        const todo = {
+            id: nextId.current,
+            text,
+            checked: false,
+        };
+        setTodos(todos.concat(todo));
+        nextId.current += 1;
+    }, [todos],);
+    
+    return (
+    ...
+    <TodoInsert onInsert={onInsert} />
+        ...
+    )
+}
+```
+
+#### TodoInsert에서 onSubmit 이벤트 설정하기
+
+App에서 TodoInsert에 넣어 준 onInsert 함수에 현재 userState를 통해 관리하고 있는 value 값을 파라미처로 넣어서 호출한다.
+
+onSubmit이라는 함수를 만들고 form의 onSubmit으로 설정
+
+props로 받아 온 onInsert 함수에 현재 value 값을 파라미터로 넣어서 호출하고, 현재 value 값을 초기화한다.
