@@ -1,70 +1,83 @@
-# Getting Started with Create React App
+# README
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### UI 구성
 
-## Available Scripts
+1. **TodoTemplate** : 화면을 가운데에 정렬, 일정 관리를 보여준다. children으로 내부 JSX를 props로 받아와서 랜더링해 준다.
+2. **TodoInsert** : 새로운 항목을 입력하고 추가할 수 있는 컴포넌트. state를 통해 인풋의 상태를 관리한다.
+3. **TodoListItem** : 각 할 일 항목에 대한 정보를 보여준다. todo 객체를 props로 받아 와서 상태에 따라 다른 스타일의 UI를 보여준다.
+4. **TodoList** : todos 배열을 props로 받아 온 후, 이를 배열 내장 함수 map을 사용해서 여러 개의 TodoListItem 컴포넌트로 변환하여 보여 준다.
 
-In the project directory, you can run:
 
-### `yarn start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```jsx
+<TodoTemplate>
+    <TodoInsert />
+    <TodoList />
+</TodoTemplate>
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `yarn test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### App에서 todos 상태 사용하기
 
-### `yarn build`
+App에서 useState를 사용하여 todos라는 상태를 정의하고, todos를 TodoList의 props로 전달
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```jsx
+// App.js
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+import { useState } from 'react';
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+function App () {
+    const [todos, setTodos] = useState([초기 데이터]);
+    
+    return (
+      <TodoTemplate>
+      <TodoInsert />
+      <TodoList todos={todos} /> 
+    </TodoTemplate>
+    )
+}
 
-### `yarn eject`
+export default App;
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+TodoList에서 todos 값을 받아 온 후 TodoItem으로 변환하여 랜더링하도록 설정해야 한다.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```jsx
+// TodoList.js
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+function TodoList ({ todos }){
+    return (
+        <div className="TodoList">
+            {todos.map(todo =>(
+                <TodoListItem todo={todo} key={todo.id} />
+            ))}
+        </div>
+    )
+}
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+export default TodoList;
+```
 
-## Learn More
+props로 받아 온 todo 배열을 map을 통해 TodoListItem으로 이루어진 배열로 변환하여 랜더링해 주었다. todo 데이터는 통째로 props로 전달해 준다. 여러 종류의 값을 전달해야 하는 경우 객체로 통째로 전달하는 편이 나중에 성능 최적화를 할 때 편리하다.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+TodoListItem 컴포넌트에서 받아 온 todo 값에 따라 제대로 된 UI를 보여줄 수 있도록 컴포넌트를 수정한다.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```jsx
+// TodoListItem.js
 
-### Code Splitting
+...
+function TodoListItem({ todo }){
+    const { text, checked } = todo;
+    
+    return (
+    <div className="TodoListItem">
+            <div className={cn('checkbox', {checked})} onClick={() => onToggle(id)}>
+                {checked ? <MdCheckBox /> : <MdCheckBoxOutlineBlank />}
+                <div className="text">{text}</div>
+            </div>
+        </div>
+    )
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
